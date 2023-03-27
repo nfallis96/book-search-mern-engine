@@ -6,6 +6,7 @@ const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schemas');
 const path = require('path');
 const db = require('./config/connection');
+const { authMiddleware } = require("./utils/auth")
 
 // required servers
 const server = new ApolloServer({
@@ -25,6 +26,9 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
 // add new apollo server with graphql schema function required
 const startApolloServer = async (typeDefs, resolvers) => {
